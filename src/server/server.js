@@ -1,25 +1,16 @@
 import express from 'express';
-import React from 'react';
-import ReactDOMServer from 'react-dom/server';
-import App from '../components/App';
+import bodyParser from 'body-parser';
 
-const server = express();
-server.use(express.static('dist'));
 
-server.get('/', (req, res) => {
-  const initialMarkup = ReactDOMServer.renderToString(<App />);
+const app = express();
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
 
-  res.send(`
-    <html>
-      <head>
-        <title>Sample React App</title>
-      </head>
-      <body>
-        <div id="mountNode">${initialMarkup}</div>
-        <script src="/main.js"></script>
-      </body>
-    </html>
-  `)
+app.use(express.static('dist'));
+const PORT = 4242;
+
+app.get('/', (req, res) => {
+  res.send(200)
 });
 
-server.listen(4242, () => console.log('Server is running...'));
+app.listen(PORT, () => console.log('Server is running on port', PORT));
