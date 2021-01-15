@@ -35,8 +35,7 @@
     "test": "jest",
     "dev:server": "nodemon --exec babel-node src/server/server.js --ignore dist/",
     "dev:bundler": "webpack -w --mode=development",
-    "seedPhotos": "node src/server/db/seedPhotos.js",
-    "seedProducts": "node src/server/db/seedProducts.js",
+    "seed": "node src/server/db/seedProducts.js",
     "db:clear": "node src/server/db/clearDb.js"
   },
   "repository": {

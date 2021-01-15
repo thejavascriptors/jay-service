@@ -4,7 +4,7 @@ const faker = require('faker');
 
 const sampleProducts = [];
 
-for (let i = 0; i <= 100; i++) {
+for (let i = 0; i < 100; i++) {
   sampleProducts.push({
     name: faker.commerce.productName(),
     brand: faker.commerce.product(),
@@ -17,6 +17,10 @@ for (let i = 0; i <= 100; i++) {
     shipping: {
       date: faker.date.soon(),
       supplier: faker.company.companyName(0),
+    },
+    photos: {
+      url: faker.image.technics(),
+      description: faker.lorem.sentence()
     }
 
   });
