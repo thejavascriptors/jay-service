@@ -51,15 +51,14 @@ class App extends React.Component {
 
   render() {
     return (
-      <div class="grid-container">
-        <div class="grid-item" id="grid-1">
-          Images Flexbox
-          {/* <Photos photos={this.state.data.photos}/>  */}
+      <div className="grid-container">
+        <div className="grid-item" id="grid-1">
+          <Photos photos={this.state.data.photos}/>
         </div>
-        <div class="grid-item" id="grid-2">Product Header
+        <div className="grid-item" id="grid-2">Product Header
           {/* <Header product={this.state.data}/> */}
         </div>
-        <div class="grid-item" id="grid-3">
+        <div className="grid-item" id="grid-3">
           Product Body
           {/* <Body product={this.state.data} /> */}
         </div>

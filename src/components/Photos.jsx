@@ -1,4 +1,6 @@
 import React from 'react';
+import Carousel from './Carousel.jsx';
+import Primary from './Primary.jsx';
 
 class Photos extends React.Component {
   constructor(props) {
@@ -12,10 +14,13 @@ class Photos extends React.Component {
 
   render() {
     return (
-      <div id="photo-carousel">
-        {this.state.carousel.map(image => (
-          <img src={image.url} alt={image.description} width="200" height="200"></img>
-        ))}
+      <div>
+        <div id="carousel-container">
+          <Carousel primary={this.state.primary} carousel={this.state.carousel}/>
+        </div>
+        <div id="primary-container">
+          <Primary primary={this.state.primary}/>
+        </div>
       </div>
     );
   }
