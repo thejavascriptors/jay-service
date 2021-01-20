@@ -11,7 +11,7 @@ class Primary extends React.Component {
 
 
     return (
-      <img src={this.props.primary.url} alt={this.props.primary.description} height="300" width="300"></img>
+      <img id="primary" src={this.props.primary.url} alt={this.props.primary.description}></img>
     );
   }
 }
