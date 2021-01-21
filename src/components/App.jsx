@@ -3,6 +3,7 @@ import axios from 'axios';
 import Photos from './Photos.jsx';
 import Header from './Header.jsx';
 import Body from './Body.jsx';
+import Zoom from './Zoom.jsx';
 
 var sampleData = {
   name: 'DualSense Wireless Controller',
@@ -15,7 +16,7 @@ var sampleData = {
   stock: 10231,
   shipping: {
     date: 'Mon, Jan 18',
-    supplier: 'Amazon.com'
+    supplier: 'Congo.com'
   },
   features: ['Haptic feedback** - Feel physically responsive feedback to your in-game actions with dual actuators which replace traditional rumble motors. In your hands, these dynamic vibrations can simulate the feeling of everything from environments to the recoil of different weapons.', 'Adaptive triggers** - Experience varying levels of force and tension as you interact with your in-game gear and environments. From pulling back an increasingly tight bowstring to hitting the brakes on a speeding car, feel physically connected to your on-screen actions.', 'Built-in microphone and headset jack - Chat with friends online*** using the built-in microphone or by connecting a headset to the 3.5mm jack. Easily switch voice capture on and off at a moment’s notice with the dedicated mute button. ***Internet and account for PlayStation Network required.'],
   photos: [
@@ -39,9 +40,12 @@ class App extends React.Component {
     super(props);
     this.state = {
       data: sampleData,
-      view: 'default'
+      zoom: false,
+      primary: sampleData.photos[0]
     };
-    this.picZoom = this.picZoom.bind(this);
+    this.toggleZoom = this.toggleZoom.bind(this);
+    this.swapPhoto = this.swapPhoto.bind(this);
+
   }
 
   // componentDidMount() {
@@ -52,20 +56,32 @@ class App extends React.Component {
   //       })
   //    });
 
-  picZoom() {
+  swapPhoto(e) {
     this.setState({
-      view: 'zoom'
+      primary: {
+        url: e.target.src,
+        description: e.target.alt
+      }
     });
+  }
+
+  toggleZoom() {
+    console.log('toggling zoom');
+    this.setState({
+      zoom: !this.state.zoom
+    });
+    console.log('state set', this.state.zoom);
   }
 
 
   render() {
 
-    if (this.state.view === 'default') {
+    if (this.state.zoom === false) {
+      console.log('zoom', this.state.zoom);
       return (
         <div className="grid-container">
           <div className="grid-item" id="grid-1">
-            <Photos photos={this.state.data.photos}/>
+            <Photos photos={this.state.data.photos} primary={this.state.primary} swapPhoto={this.swapPhoto} toggleZoom={this.toggleZoom}/>
           </div>
           <div className="grid-item" id="grid-2">
             <Header product={this.state.data}/>
@@ -78,13 +94,16 @@ class App extends React.Component {
     }
 
 
-    if (this.state.view === 'zoom') {
+    if (this.state.zoom === true) {
+      console.log('switching to zoom render');
       return (
         <div className="grid-container">
           <div className="grid-item" id="grid-1">
-            <Photos photos={this.state.data.photos}/>
+            <Photos photos={this.state.data.photos} primary={this.state.primary} swapPhoto={this.swapPhoto} toggleZoom={this.toggleZoom}/>
           </div>
-          {/* <Zoom photo={}/> */}
+          <div id="zoom-container">
+            <Zoom photo={this.state.primary}/>
+          </div>
           <div className="grid-item" id="grid-2">
             <Header product={this.state.data}/>
           </div>

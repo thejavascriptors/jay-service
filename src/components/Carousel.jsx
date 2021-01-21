@@ -14,7 +14,6 @@ class Carousel extends React.Component {
         <img src={image.url} alt={image.description} key={i} width="100" height="100" className="photo-on-carousel" onMouseOver={this.props.swapPhoto}></img>
       </div>
     );
-    console.log('view', view);
 
     return (
       <div id="photo-carousel">
