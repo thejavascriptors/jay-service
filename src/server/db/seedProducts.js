@@ -1,9 +1,10 @@
 const db = require('./index.js');
-const Product = require('./Product.js');
+const Products = require('./Products.js');
 const faker = require('faker');
 
 const sampleProducts = [];
 
+// seeds 100 sample products into sampleProducts array
 for (let i = 0; i < 100; i++) {
   sampleProducts.push({
     name: faker.commerce.productName(),
@@ -18,16 +19,26 @@ for (let i = 0; i < 100; i++) {
       date: faker.date.soon(),
       supplier: faker.company.companyName(0),
     },
-    photos: {
-      url: faker.image.technics(),
-      description: faker.lorem.sentence()
-    }
+    photos: [
+      {
+        url: faker.image.technics(),
+        description: faker.lorem.sentence()
+      },
+      {
+        url: faker.image.technics(),
+        description: faker.lorem.sentence()
+      },
+      {
+        url: faker.image.technics(),
+        description: faker.lorem.sentence()
+      }
 
   });
 }
 
+// inserts 100 sample products into Products db
 const insertProducts = function () {
-  Product.create(sampleProducts)
+  Products.create(sampleProducts)
     .then(() => console.log('Seeded sample products'));
 };
 

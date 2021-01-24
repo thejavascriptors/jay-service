@@ -1,9 +1,45 @@
 import React from 'react';
 import axios from 'axios';
 import Photos from './Photos.jsx';
-import Header from './Header.jsx';
+import Description from './Description.jsx';
 import Body from './Body.jsx';
 import Zoom from './Zoom.jsx';
+import styled from 'styled-components';
+import { createGlobalStyle } from 'styled-components';
+
+const GlobalStyle = createGlobalStyle`
+  * {
+    box-sizing: border-box;
+  }
+
+  a {
+    color: #007185;
+    text-decoration: none;
+  }
+  a:hover {
+    color: #C7511F;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+
+  body{
+    font-family: "Amazon Ember", Arial, sans-serif;
+    font-size: 14px;
+    line-height: 20px;
+  }
+
+  hr{
+    color: rgb(128, 128, 128);
+    background-color: trasnparent;
+    display: block;
+    height: 1px;
+    border-width: 0;
+    border-top: 1px solid #e7e7e7;
+    line-height: 19px;
+    margin-top: 0;
+    margin-bottom: 14px;
+  }
+`;
 
 var sampleData = {
   name: 'DualSense Wireless Controller',
@@ -41,10 +77,13 @@ class App extends React.Component {
     this.state = {
       data: sampleData,
       zoom: false,
-      primary: sampleData.photos[0]
+      primary: sampleData.photos[0],
+      zoomX: null,
+      zoomY: null,
     };
-    this.toggleZoom = this.toggleZoom.bind(this);
+    this.toggleZoomIn = this.toggleZoomIn.bind(this);
     this.swapPhoto = this.swapPhoto.bind(this);
+    this.toggleZoomOut = this.toggleZoomOut.bind(this);
 
   }
 
@@ -62,15 +101,28 @@ class App extends React.Component {
         url: e.target.src,
         description: e.target.alt
       }
+      // highlight: e.target.
     });
   }
 
-  toggleZoom() {
-    console.log('toggling zoom');
+  toggleZoomIn(event) {
+    console.log('event:', event);
+    let x = event.nativeEvent.offsetX;
+    let y = event.nativeEvent.offsetY;
+    console.log('x:', x, 'y:', y);
+
     this.setState({
-      zoom: !this.state.zoom
+      zoom: true,
+      zoomX: x,
+      zoomY: y,
+
     });
-    console.log('state set', this.state.zoom);
+  }
+
+  toggleZoomOut(event) {
+    this.setState({
+      zoom: false
+    });
   }
 
 
@@ -80,14 +132,14 @@ class App extends React.Component {
       console.log('zoom', this.state.zoom);
       return (
         <div className="grid-container">
+          <GlobalStyle />
           <div className="grid-item" id="grid-1">
-            <Photos photos={this.state.data.photos} primary={this.state.primary} swapPhoto={this.swapPhoto} toggleZoom={this.toggleZoom}/>
+            <Photos photos={this.state.data.photos} primary={this.state.primary} swapPhoto={this.swapPhoto} toggleZoomIn={this.toggleZoomIn}
+              toggleZoomOut={this.toggleZoomOut}/>
           </div>
           <div className="grid-item" id="grid-2">
-            <Header product={this.state.data}/>
-          </div>
-          <div className="grid-item" id="grid-3">
-            <Body product={this.state.data} />
+            <Description product={this.state.data}/>
+            {/* <Body product={this.state.data} /> */}
           </div>
         </div>
       );
@@ -98,17 +150,15 @@ class App extends React.Component {
       console.log('switching to zoom render');
       return (
         <div className="grid-container">
+          <GlobalStyle />
           <div className="grid-item" id="grid-1">
-            <Photos photos={this.state.data.photos} primary={this.state.primary} swapPhoto={this.swapPhoto} toggleZoom={this.toggleZoom}/>
-          </div>
-          <div id="zoom-container">
-            <Zoom photo={this.state.primary}/>
+            <Photos photos={this.state.data.photos} primary={this.state.primary} swapPhoto={this.swapPhoto} toggleZoomIn={this.toggleZoomIn}
+              toggleZoomOut={this.toggleZoomOut}/>
           </div>
           <div className="grid-item" id="grid-2">
-            <Header product={this.state.data}/>
-          </div>
-          <div className="grid-item" id="grid-3">
-            <Body product={this.state.data} />
+            <Zoom photo={this.state.primary} x={this.state.zoomX} y={this.state.zoomY}/>
+            <Description product={this.state.data}/>
+            {/* <Body product={this.state.data} /> */}
           </div>
         </div>
       );
