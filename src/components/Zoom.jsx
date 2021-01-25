@@ -1,4 +1,5 @@
 import React from 'react';
+import styled from 'styled-components';
 
 class Zoom extends React.Component {
   constructor(props) {
@@ -12,14 +13,15 @@ class Zoom extends React.Component {
 
 
   render() {
-    console.log('rendering zoom');
-    console.log('props', this.props);
-    console.log('state', this.state.photo.url);
 
     return (
-      <img id="zoom" src={this.state.photo.url} alt={this.state.photo.description}></img>
+      // sets background image. changes background positioning as mouse moves
+      <div id="zoom-container" style={{backgroundImage: 'url(' + this.props.photo.url + ')', backgroundPosition: (-this.props.x * 1.5) + 'px ' + (-this.props.y * 1.5) + 'px'}} >
+
+      </div>
     );
   }
 }
+
 
 export default Zoom;

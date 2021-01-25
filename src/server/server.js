@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const Product = require('./db/Product.js');
+const Products = require('./db/Products.js');
 
 
 const app = express();
@@ -17,7 +17,7 @@ app.get('/', (req, res) => {
 app.get('/products/:id', (req, res) => {
   let id = req.params;
   console.log('id of req', id);
-  Product.find({}).then((data) => {
+  Products.find({}).then((data) => {
     res.send(data);
   });
 });

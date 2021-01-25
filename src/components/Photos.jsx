@@ -1,26 +1,16 @@
 import React from 'react';
 import Carousel from './Carousel.jsx';
 import Primary from './Primary.jsx';
+import styled from 'styled-components';
 
 class Photos extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      // primary: this.props.primary,
       carousel: this.props.photos
     };
 
-    // this.swapPhoto = this.swapPhoto.bind(this);
   }
-
-  // swapPhoto(e) {
-  //   this.setState({
-  //     primary: {
-  //       url: e.target.src,
-  //       description: e.target.alt
-  //     }
-  //   });
-  // }
 
 
   render() {
@@ -29,9 +19,7 @@ class Photos extends React.Component {
         <div id="carousel-container">
           <Carousel primary={this.state.primary} carousel={this.state.carousel} swapPhoto={this.props.swapPhoto}/>
         </div>
-        <div id="primary-container">
-          <Primary primary={this.props.primary} toggleZoom={this.props.toggleZoom}/>
-        </div>
+        <Primary primary={this.props.primary} toggleZoomIn={this.props.toggleZoomIn} toggleZoomOut={this.props.toggleZoomOut}/>
       </div>
     );
   }
