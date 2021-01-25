@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const Products = require('./db/Products.js');
+const Product = require('./db/Products.js');
 
 
 const app = express();
@@ -14,12 +14,13 @@ app.get('/', (req, res) => {
   res.send(200);
 });
 
-app.get('/products/:id', (req, res) => {
-  let id = req.params;
-  console.log('id of req', id);
-  Products.find({}).then((data) => {
-    res.send(data);
-  });
+app.get('/products/', (req, res) => {
+  let id = req.params.id;
+  Product.find({ name: 'DualSense Wireless Controller' })
+    .then((data) => {
+      console.log('data:', data);
+      res.send(data);
+    });
 });
 
 app.listen(PORT, () => console.log('Server is running on port', PORT));

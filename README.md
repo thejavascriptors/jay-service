@@ -4,10 +4,10 @@
 
 ## Related Projects
 
-  - https://github.com/teamName/repo
-  - https://github.com/teamName/repo
-  - https://github.com/teamName/repo
-  - https://github.com/teamName/repo
+  - https://github.com/Team-10-Thors-Hammer/minh-services
+  - https://github.com/Team-10-Thors-Hammer/jay-service
+  - https://github.com/Team-10-Thors-Hammer/berret-service
+  - https://github.com/Team-10-Thors-Hammer/adrian-services
 
 ## Table of Contents
 
@@ -18,6 +18,15 @@
 ## Usage
 
 > Some usage instructions
+
+1. run npm install -g webpack
+2. run npm install
+3. To initiate bundling: npm run dev:bundler
+4. To start server: npm run dev:server
+5. To seed database: npm run seed
+
+-- Incase something goes wrong. To clear entire database: npm run db:clear;
+
 
 ## Requirements
 

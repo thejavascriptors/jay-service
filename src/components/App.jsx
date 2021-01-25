@@ -1,5 +1,5 @@
 import React from 'react';
-import axios from 'axios';
+import Axios from 'axios';
 import Photos from './Photos.jsx';
 import Description from './Description.jsx';
 import Body from './Body.jsx';
@@ -41,45 +41,38 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
-var sampleData = {
-  name: 'DualSense Wireless Controller',
-  brand: 'PlayStation',
-  platform: 'PlayStation 5',
-  stars: 4.97,
-  ratings: 8391,
-  shorthand: 'ps5 controller',
-  price: '$69.98',
-  stock: 10231,
-  shipping: {
-    date: 'Mon, Jan 18',
-    supplier: 'Congo.com'
-  },
-  features: ['Haptic feedback** - Feel physically responsive feedback to your in-game actions with dual actuators which replace traditional rumble motors. In your hands, these dynamic vibrations can simulate the feeling of everything from environments to the recoil of different weapons.', 'Adaptive triggers** - Experience varying levels of force and tension as you interact with your in-game gear and environments. From pulling back an increasingly tight bowstring to hitting the brakes on a speeding car, feel physically connected to your on-screen actions.', 'Built-in microphone and headset jack - Chat with friends online*** using the built-in microphone or by connecting a headset to the 3.5mm jack. Easily switch voice capture on and off at a moment’s notice with the dedicated mute button. ***Internet and account for PlayStation Network required.'],
-  photos: [
-    {
-      url: 'https://fec-project-jay-jones.s3.amazonaws.com/controllerfront.jpg',
-      description: 'playstation 5 controller front profile'
-    },
-    {
-      url: 'https://fec-project-jay-jones.s3.amazonaws.com/boxfront.jpg',
-      description: 'playstation 5 controller box front'
-    },
-    {
-      url: 'https://fec-project-jay-jones.s3.amazonaws.com/boxangle.jpg',
-      description: 'playstation 5 controller box from angle'
-    }
-  ]
-};
+const Container = styled.div`
+  display: grid;
+  grid-template-columns: 2fr 3fr;
+  height: 100%;
+`;
+
+const Grid1 = styled.div`
+  grid-row-start: 1;
+  grid-column: 1 / 2;
+  grid-template-columns: 1fr 4fr;
+  height: 100%;
+`;
+
+const Grid2 = styled.div`
+  grid-column: 2 / 3;
+  height: 100%;
+  position: relative;
+  z-index: 0;
+  margin-left: 18px;
+`;
+
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: sampleData,
+      data: {},
       zoom: false,
-      primary: sampleData.photos[0],
+      primary: {},
       zoomX: null,
       zoomY: null,
+      view: 'loading'
     };
     this.toggleZoomIn = this.toggleZoomIn.bind(this);
     this.swapPhoto = this.swapPhoto.bind(this);
@@ -87,13 +80,17 @@ class App extends React.Component {
 
   }
 
-  // componentDidMount() {
-  //   axios(`localhost:4242/products/${this.state.productId}`)
-  //     .then(product => {
-  //       this.setState({
-  //         data: product
-  //       })
-  //    });
+  componentDidMount() {
+    Axios('http://localhost:4242/products/')
+      .then(product => {
+        let currProduct = product.data[0];
+        this.setState({
+          data: currProduct,
+          primary: currProduct.photos[0],
+          view: 'standard'
+        });
+      });
+  }
 
   swapPhoto(e) {
     this.setState({
@@ -101,15 +98,12 @@ class App extends React.Component {
         url: e.target.src,
         description: e.target.alt
       }
-      // highlight: e.target.
     });
   }
 
   toggleZoomIn(event) {
-    console.log('event:', event);
     let x = event.nativeEvent.offsetX;
     let y = event.nativeEvent.offsetY;
-    console.log('x:', x, 'y:', y);
 
     this.setState({
       zoom: true,
@@ -128,39 +122,42 @@ class App extends React.Component {
 
   render() {
 
-    if (this.state.zoom === false) {
-      console.log('zoom', this.state.zoom);
+    if (this.state.view === 'loading') {
       return (
-        <div className="grid-container">
-          <GlobalStyle />
-          <div className="grid-item" id="grid-1">
-            <Photos photos={this.state.data.photos} primary={this.state.primary} swapPhoto={this.swapPhoto} toggleZoomIn={this.toggleZoomIn}
-              toggleZoomOut={this.toggleZoomOut}/>
-          </div>
-          <div className="grid-item" id="grid-2">
-            <Description product={this.state.data}/>
-            {/* <Body product={this.state.data} /> */}
-          </div>
+        <div>
         </div>
       );
     }
 
-
-    if (this.state.zoom === true) {
-      console.log('switching to zoom render');
+    if (this.state.zoom === false && this.state.view === 'standard') {
       return (
-        <div className="grid-container">
+        <Container>
           <GlobalStyle />
-          <div className="grid-item" id="grid-1">
+          <Grid1>
             <Photos photos={this.state.data.photos} primary={this.state.primary} swapPhoto={this.swapPhoto} toggleZoomIn={this.toggleZoomIn}
               toggleZoomOut={this.toggleZoomOut}/>
-          </div>
-          <div className="grid-item" id="grid-2">
-            <Zoom photo={this.state.primary} x={this.state.zoomX} y={this.state.zoomY}/>
+          </Grid1>
+          <Grid2>
             <Description product={this.state.data}/>
-            {/* <Body product={this.state.data} /> */}
-          </div>
-        </div>
+          </Grid2>
+        </Container>
+      );
+    }
+
+
+    if (this.state.zoom === true && this.state.view === 'standard') {
+      return (
+        <Container>
+          <GlobalStyle />
+          <Grid1>
+            <Photos photos={this.state.data.photos} primary={this.state.primary} swapPhoto={this.swapPhoto} toggleZoomIn={this.toggleZoomIn}
+              toggleZoomOut={this.toggleZoomOut}/>
+          </Grid1>
+          <Grid2>
+            <Description product={this.state.data}/>
+            <Zoom photo={this.state.primary} x={this.state.zoomX} y={this.state.zoomY}/>
+          </Grid2>
+        </Container>
       );
     }
   }

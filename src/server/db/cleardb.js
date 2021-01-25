@@ -1,4 +1,4 @@
-const Product = require('./Product.js');
+const Product = require('./Products.js');
 const db = require('./index.js');
 
 // clears the Products database and returns number of cleared items

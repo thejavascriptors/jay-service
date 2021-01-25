@@ -3,6 +3,20 @@ import Carousel from './Carousel.jsx';
 import Primary from './Primary.jsx';
 import styled from 'styled-components';
 
+const Container = styled.div`
+  margin-bottom: 22px;
+  display: grid;
+  position: relative;
+  grid-template-columns: 1fr 10fr;
+  height: 100%;
+`;
+
+const CarouselContainer = styled.div`
+  display: flex;
+  grid-column-start: 1;
+  grid-column-end: 2;
+`;
+
 class Photos extends React.Component {
   constructor(props) {
     super(props);
@@ -15,12 +29,12 @@ class Photos extends React.Component {
 
   render() {
     return (
-      <div id="photo-container">
-        <div id="carousel-container">
+      <Container>
+        <CarouselContainer>
           <Carousel primary={this.state.primary} carousel={this.state.carousel} swapPhoto={this.props.swapPhoto}/>
-        </div>
+        </CarouselContainer>
         <Primary primary={this.props.primary} toggleZoomIn={this.props.toggleZoomIn} toggleZoomOut={this.props.toggleZoomOut}/>
-      </div>
+      </Container>
     );
   }
 }

@@ -82,13 +82,19 @@ const Reviews = styled.div`
   display: inline-block;
 `;
 
+const Container = styled.div`
+  line-height: 20px;
+`;
+
 const Header = (props) => (
-  <div id="product-header">
+  <Container>
     <ProductName>{props.product.name}</ProductName>
     <a href="">Brand: {props.product.brand}</a>
     <div><b>Platform:</b> {props.product.platform} | Rated: <a href="">Rating Pending</a></div>
     <Reviews>
-      Stars: {props.product.stars}
+      Stars: &#9733; {props.product.stars}
+      &nbsp;
+      &nbsp;
       <a href=""> {props.product.ratings} ratings </a>
     </Reviews>
     <div>
@@ -106,7 +112,7 @@ const Header = (props) => (
       </CongoChoice>
     </div>
     <Break></Break>
-  </div>
+  </Container>
 );
 
 export default Header;
