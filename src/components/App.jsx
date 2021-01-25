@@ -2,7 +2,6 @@ import React from 'react';
 import Axios from 'axios';
 import Photos from './Photos.jsx';
 import Description from './Description.jsx';
-import Body from './Body.jsx';
 import Zoom from './Zoom.jsx';
 import styled from 'styled-components';
 import { createGlobalStyle } from 'styled-components';
