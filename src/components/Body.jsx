@@ -70,6 +70,9 @@ const QBubble = styled.span`
   }
 `;
 
+const OrderWithin = styled.span`
+  color: #565959;
+`;
 
 
 
@@ -81,7 +84,8 @@ const Body = (props) => {
   }
 
   const price = props.product.price;
-
+  const date = props.product.shipping.date.split(' ');
+  let shortenedDate = date.slice(0, 3).join(' ');
 
 
   return (
@@ -99,9 +103,9 @@ const Body = (props) => {
       <ThankYou href="">Thank you for being a Prime member. Get $70 off instantly: Pay $0.00 upon approval for the Congo Prime Rewards Visa Card. No annual fee.</ThankYou>
       <Stock>In Stock.</Stock>
       <Delivery>FREE delivery:
-        <b> {props.product.shipping.date}</b>
+        <b> {shortenedDate}</b>
         <br/>
-        <span id="orderWithin">Order within 6 hours and 13 mins</span>
+        <OrderWithin>Order within 6 hours and 13 mins</OrderWithin>
       </Delivery>
       <div>Ships from and sold by {props.product.shipping.supplier}
         <FeatureList>

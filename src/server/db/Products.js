@@ -9,11 +9,11 @@ const productSchema = new mongoose.Schema(
     platform: String,
     stars: Number,
     ratings: Number,
-    description: String,
+    shorthand: String,
     price: String,
     stock: Number,
     shipping: {
-      date: Date,
+      date: String,
       supplier: String
     },
     features: [
@@ -22,10 +22,20 @@ const productSchema = new mongoose.Schema(
       String,
     ],
     description: String,
-    photo: {
-      url: String,
-      description: String
-    }
+    photos: [
+      {
+        url: String,
+        description: String
+      },
+      {
+        url: String,
+        description: String
+      },
+      {
+        url: String,
+        description: String
+      }
+    ]
     // information: {
     //   asin: String,
     //   releaseDate: Date,
@@ -45,6 +55,6 @@ const productSchema = new mongoose.Schema(
 
 );
 
-const Products = mongoose.model('Products', productSchema);
+const Product = mongoose.model('Products', productSchema);
 
-module.exports = Products;
+module.exports = Product;
