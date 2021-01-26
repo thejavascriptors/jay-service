@@ -1,6 +1,6 @@
 import React from 'react';
-import Carousel from './Photos/Carousel.jsx';
-import Primary from './Photos/Primary.jsx';
+import Carousel from './photos/Carousel.jsx';
+import Primary from './photos/Primary.jsx';
 import styled from 'styled-components';
 
 const Container = styled.div`
