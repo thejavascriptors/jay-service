@@ -23,7 +23,9 @@
 2. run npm install
 3. To initiate bundling: npm run dev:bundler
 4. To start server: npm run dev:server
+    - This server runs on localhost:4242
 5. To seed database: npm run seed
+  - If the database is not seeded, this module will display Loading...
 
 -- Incase something goes wrong. To clear entire database: npm run db:clear;
 

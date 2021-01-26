@@ -1,13 +1,16 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const Product = require('./db/Products.js');
+const cors = require('cors');
+const path = require('path');
 
 
 const app = express();
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, '../../dist')));
 
-app.use(express.static('dist'));
 const PORT = 4242;
 
 app.get('/', (req, res) => {
@@ -18,7 +21,6 @@ app.get('/products/', (req, res) => {
   let id = req.params.id;
   Product.find({ name: 'DualSense Wireless Controller' })
     .then((data) => {
-      console.log('data:', data);
       res.send(data);
     });
 });

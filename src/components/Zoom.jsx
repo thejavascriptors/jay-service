@@ -46,7 +46,7 @@ class Zoom extends React.Component {
     // sets background image. changes background positioning as mouse moves
     return (
       <Container>
-        <Image style={{backgroundImage: 'url(' + this.props.photo.url + ')', backgroundPosition: (-this.props.x * 1.5) + 'px ' + (-this.props.y * 1.5) + 'px'}}>
+        <Image style={{backgroundImage: 'url(' + this.props.photo.url + ')', backgroundPosition: (-this.props.x * 1.6) + 'px ' + (-this.props.y * 1.6) + 'px'}}>
         </Image>
       </Container>
     );

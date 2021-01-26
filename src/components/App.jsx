@@ -44,6 +44,7 @@ const Container = styled.div`
   display: grid;
   grid-template-columns: 2fr 3fr;
   height: 100%;
+  background-color: white;
 `;
 
 const Grid1 = styled.div`
@@ -88,6 +89,9 @@ class App extends React.Component {
           primary: currProduct.photos[0],
           view: 'standard'
         });
+      })
+      .catch(err => {
+        console.error(err);
       });
   }
 

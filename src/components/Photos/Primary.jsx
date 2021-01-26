@@ -7,7 +7,8 @@ const Lens = styled.div`
   cursor: pointer;
   z-index: 1;
   visibility: visible;
-  object-fit: fill;
+  height: 100%;
+  width: auto;
   `;
 // background-image: ${url("https://images-na.ssl-images-amazon.com/images/G/01/apparel/rcxgs/tile._CB483369110_.gif/")};
 
@@ -42,8 +43,8 @@ class Primary extends React.Component {
   render() {
 
     return (
-      <PrimContainer>
-        <Lens></Lens>
+      <PrimContainer id="primary-container">
+        <Lens id="lens"></Lens>
         <Image id="primary" src={this.props.primary.url} alt={this.props.primary.description} onMouseMove={this.props.toggleZoomIn} onMouseOut={this.props.toggleZoomOut} />
       </PrimContainer>
 
