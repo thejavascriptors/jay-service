@@ -144,24 +144,25 @@ class App extends React.Component {
               <Description product={this.state.data}/>
             </Grid2>
           </Container>
-        </ GlobalStyle>
+        </GlobalStyle>
       );
     }
 
 
     if (this.state.zoom === true && this.state.view === 'standard') {
       return (
-        <Container>
-          <GlobalStyle />
-          <Grid1>
-            <Photos photos={this.state.data.photos} primary={this.state.primary} swapPhoto={this.swapPhoto} toggleZoomIn={this.toggleZoomIn}
-              toggleZoomOut={this.toggleZoomOut}/>
-          </Grid1>
-          <Grid2>
-            <Description product={this.state.data}/>
-            <Zoom photo={this.state.primary} x={this.state.zoomX} y={this.state.zoomY}/>
-          </Grid2>
-        </Container>
+        <GlobalStyle>
+          <Container>
+            <Grid1>
+              <Photos photos={this.state.data.photos} primary={this.state.primary} swapPhoto={this.swapPhoto} toggleZoomIn={this.toggleZoomIn}
+                toggleZoomOut={this.toggleZoomOut}/>
+            </Grid1>
+            <Grid2>
+              <Description product={this.state.data}/>
+              <Zoom photo={this.state.primary} x={this.state.zoomX} y={this.state.zoomY}/>
+            </Grid2>
+          </Container>
+        </GlobalStyle>
       );
     }
   }
