@@ -6,7 +6,7 @@ import Zoom from './Zoom.jsx';
 import styled from 'styled-components';
 import { createGlobalStyle } from 'styled-components';
 
-const GlobalStyle = createGlobalStyle`
+const GlobalStyle = styled.div`
   * {
     box-sizing: border-box;
   }
@@ -29,7 +29,7 @@ const GlobalStyle = createGlobalStyle`
 
   hr{
     color: rgb(128, 128, 128);
-    background-color: trasnparent;
+    background-color: transparent;
     display: block;
     height: 1px;
     border-width: 0;
@@ -134,33 +134,35 @@ class App extends React.Component {
 
     if (this.state.zoom === false && this.state.view === 'standard') {
       return (
-        <Container>
-          <GlobalStyle />
-          <Grid1>
-            <Photos photos={this.state.data.photos} primary={this.state.primary} swapPhoto={this.swapPhoto} toggleZoomIn={this.toggleZoomIn}
-              toggleZoomOut={this.toggleZoomOut}/>
-          </Grid1>
-          <Grid2>
-            <Description product={this.state.data}/>
-          </Grid2>
-        </Container>
+        <GlobalStyle>
+          <Container>
+            <Grid1>
+              <Photos photos={this.state.data.photos} primary={this.state.primary} swapPhoto={this.swapPhoto} toggleZoomIn={this.toggleZoomIn}
+                toggleZoomOut={this.toggleZoomOut}/>
+            </Grid1>
+            <Grid2>
+              <Description product={this.state.data}/>
+            </Grid2>
+          </Container>
+        </GlobalStyle>
       );
     }
 
 
     if (this.state.zoom === true && this.state.view === 'standard') {
       return (
-        <Container>
-          <GlobalStyle />
-          <Grid1>
-            <Photos photos={this.state.data.photos} primary={this.state.primary} swapPhoto={this.swapPhoto} toggleZoomIn={this.toggleZoomIn}
-              toggleZoomOut={this.toggleZoomOut}/>
-          </Grid1>
-          <Grid2>
-            <Description product={this.state.data}/>
-            <Zoom photo={this.state.primary} x={this.state.zoomX} y={this.state.zoomY}/>
-          </Grid2>
-        </Container>
+        <GlobalStyle>
+          <Container>
+            <Grid1>
+              <Photos photos={this.state.data.photos} primary={this.state.primary} swapPhoto={this.swapPhoto} toggleZoomIn={this.toggleZoomIn}
+                toggleZoomOut={this.toggleZoomOut}/>
+            </Grid1>
+            <Grid2>
+              <Description product={this.state.data}/>
+              <Zoom photo={this.state.primary} x={this.state.zoomX} y={this.state.zoomY}/>
+            </Grid2>
+          </Container>
+        </GlobalStyle>
       );
     }
   }
