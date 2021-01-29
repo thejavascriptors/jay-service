@@ -1,6 +1,6 @@
 import React from 'react';
-import Body from './description/Body.jsx';
-import Header from './description/Header.jsx';
+import Body from './text/Body.jsx';
+import Header from './text/Header.jsx';
 import styled from 'styled-components';
 
 const Container = styled.div`
