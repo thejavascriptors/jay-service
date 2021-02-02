@@ -36,7 +36,7 @@ const GlobalStyle = styled.div`
     border-top: 1px solid #e7e7e7;
     line-height: 19px;
     margin-top: 0;
-    margin-bottom: 14px;
+    margin-bottom: 12px;
   }
 `;
 
@@ -72,7 +72,8 @@ class App extends React.Component {
       primary: {},
       zoomX: null,
       zoomY: null,
-      view: 'loading'
+      view: 'loading',
+      highlight: 0
     };
     this.toggleZoomIn = this.toggleZoomIn.bind(this);
     this.swapPhoto = this.swapPhoto.bind(this);
@@ -100,7 +101,8 @@ class App extends React.Component {
       primary: {
         url: e.target.src,
         description: e.target.alt
-      }
+      },
+      highlight: Number(e.target.id)
     });
   }
 
@@ -138,7 +140,7 @@ class App extends React.Component {
           <Container>
             <Grid1>
               <Photos photos={this.state.data.photos} primary={this.state.primary} swapPhoto={this.swapPhoto} toggleZoomIn={this.toggleZoomIn}
-                toggleZoomOut={this.toggleZoomOut}/>
+                toggleZoomOut={this.toggleZoomOut} highlight={this.state.highlight}/>
             </Grid1>
             <Grid2>
               <Description product={this.state.data}/>
