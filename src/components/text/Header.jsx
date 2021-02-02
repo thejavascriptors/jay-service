@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import Stars from './Stars.jsx';
 
 const ProductName = styled.h1`
   color: rgb(15, 17, 17);
@@ -79,11 +80,16 @@ const Break = styled.hr`
 `;
 
 const Reviews = styled.div`
-  display: inline-block;
+  /* display: inline-block; */
+  line-height: normal !important;
 `;
 
 const Container = styled.div`
   line-height: 20px;
+`;
+
+const Ratings = styled.a`
+  margin-bottom: 1px;
 `;
 
 const Header = (props) => (
@@ -92,10 +98,10 @@ const Header = (props) => (
     <a href="">Brand: {props.product.brand}</a>
     <div><b>Platform:</b> {props.product.platform} | Rated: <a href="">Rating Pending</a></div>
     <Reviews>
-      Stars: &#9733; {props.product.stars}
+      <Stars stars={props.product.stars}/>
       &nbsp;
       &nbsp;
-      <a href=""> {props.product.ratings} ratings </a>
+      <Ratings> {props.product.ratings} ratings </Ratings>
     </Reviews>
     <div>
       <CongoChoice>

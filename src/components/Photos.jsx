@@ -21,7 +21,8 @@ class Photos extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      carousel: this.props.photos
+      carousel: this.props.photos,
+      highlight: 0
     };
 
   }
@@ -31,7 +32,7 @@ class Photos extends React.Component {
     return (
       <Container>
         <CarouselContainer>
-          <Carousel primary={this.state.primary} carousel={this.state.carousel} swapPhoto={this.props.swapPhoto}/>
+          <Carousel primary={this.state.primary} carousel={this.state.carousel} swapPhoto={this.props.swapPhoto} highlight={this.props.highlight}/>
         </CarouselContainer>
         <Primary primary={this.props.primary} toggleZoomIn={this.props.toggleZoomIn} toggleZoomOut={this.props.toggleZoomOut}/>
       </Container>
