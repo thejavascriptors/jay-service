@@ -38,10 +38,6 @@ const GlobalStyle = styled.div`
     margin-top: 0;
     margin-bottom: 12px;
   }
-  #photo-container-0{
-    border-color: #e77600;
-  }
-
 `;
 
 const Container = styled.div`
@@ -101,7 +97,6 @@ class App extends React.Component {
   }
 
   swapPhoto(e) {
-    console.log('eventkey', e.target.id);
     this.setState({
       primary: {
         url: e.target.src,
