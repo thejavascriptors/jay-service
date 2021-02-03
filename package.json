@@ -40,7 +40,7 @@
   },
   "scripts": {
     "sdc:server": "nodemon src/server/index.js",
-    "sdc:seed": "node",
+    "sdc:seed": "node src/server/seed.js",
     "test": "jest",
     "dev:server": "nodemon --exec babel-node src/server/server.js --ignore dist/",
     "dev:bundler": "webpack -w --mode=development",
