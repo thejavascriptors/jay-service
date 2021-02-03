@@ -12,11 +12,12 @@
     "compression": "^1.7.4",
     "cors": "^2.8.5",
     "express": "^4.17.1",
-    "faker": "^5.1.0",
+    "faker": "^5.3.1",
     "init": "^0.1.2",
     "mongodb": "^3.6.3",
     "mongoose": "^5.11.11",
     "path": "^0.12.7",
+    "pg": "^8.5.1",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
     "react-is": "^16.13.1",
@@ -38,6 +39,8 @@
     "webpack": "^5.15.0"
   },
   "scripts": {
+    "sdc:server": "nodemon src/server/index.js",
+    "sdc:seed": "node",
     "test": "jest",
     "dev:server": "nodemon --exec babel-node src/server/server.js --ignore dist/",
     "dev:bundler": "webpack -w --mode=development",
