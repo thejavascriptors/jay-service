@@ -34,3 +34,6 @@ CREATE TABLE images(
 	    REFERENCES products(product_id)
 );
 
+CREATE INDEX product_feature_id ON features(product_id);
+CREATE INDEX product_image_id ON images(product_id);
+

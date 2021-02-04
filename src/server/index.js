@@ -35,7 +35,9 @@ app.get('/products/:id', (req, res) => {
   //   err ? res.send(err) : res.send(response);
   // });
 
-  let product;
+  // EXPLAIN ANALYZE SELECT * FROM FEATURES WHERE product_id = '7mhmufvqf3vg';
+
+  // let product;
   // Single query
   let productQuery = `SELECT * FROM products WHERE product_id = '${id}'`;
   let featureQuery = `SELECT * FROM features WHERE product_id = '${id}'`;
@@ -77,6 +79,7 @@ app.get('/products/:id', (req, res) => {
     });
   });
 });
+
 
 /*
   let dataTemplate = {

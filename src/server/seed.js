@@ -74,5 +74,5 @@ let seedDB = () => {
 };
 seedDB();
 
-
-// Currently: 1 min for 100k :: 10 min for 1 mil :: 100 min / 1.5 hours for 10m
+// Old: 1 min for 100k :: 10 min for 1 mil :: 100 min / 1.5 hours for 10m
+// New: 13 min for 10m
