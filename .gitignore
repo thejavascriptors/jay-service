@@ -1,3 +1,13 @@
+# Csv
+src/server/csv/ids.csv
+src/server/csv/features.csv
+src/server/csv/images.csv
+src/server/csv/products1.csv
+src/server/csv/products2.csv
+
+# Other
+src/.DS_Store
+
 # Logs
 logs
 *.log

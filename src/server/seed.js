@@ -1,4 +1,6 @@
 let faker = require('faker');
+const fs = require('fs');
+const csv = require('csv-parser');
 const { Pool, Client } = require('pg');
 
 const pool = new Pool({
@@ -9,91 +11,68 @@ const pool = new Pool({
   port: 5432
 });
 
-let errorCount = 0;
-let successCount = 0;
-let primariesComplete = 0;
-let genRecord = () => {
-  // Helpers
-  let minMax = (min, max) => {
-    return Math.random() * (max - min) + min;
+
+let seedDB = () => {
+  let originalStart = new Date().getTime();
+  let seedImage = () => {
+    console.log('SEEDING IMAGE ...');
+    let start = new Date().getTime();
+    let imageCSVPath = '/private/tmp/sdc-csv/images.csv';
+    let imageQuery = `COPY images FROM '${imageCSVPath}' DELIMITER ',' CSV HEADER`;
+    pool.query(imageQuery, (err, response) => {
+      if (err) { return console.log(err); }
+      console.log('---------- IMAGE SUCCESS ----------');
+      let end = new Date().getTime();
+      console.log(`Seeeding Time: ${Math.floor((end - start) * 100 / 1000) / 100} seconds`);
+      console.log('.');
+      console.log('..');
+      console.log('...');
+      console.log('---------- SEEDING SUCCESS ----------');
+      console.log(`Seeeding Time: ${Math.floor((end - originalStart) * 100 / 60000) / 100} min / ${Math.floor((end - start) * 100 / 1000) / 100} seconds`);
+    });
   };
-  // Products
-  let id = faker.random.alphaNumeric(12)
-  let title = faker.commerce.productName();
-  let shorthand = faker.lorem.words(2);
-  let brand = faker.commerce.product();
-  let price = faker.commerce.price(1.50, 799, 2, '$');
-  let stock = Math.floor(Math.random() * 1000);
-  let stars = (Math.random() * 5).toPrecision(3);
-  let ratings = Math.floor(Math.random() * 9000);
-  let shipDate = faker.date.soon(2);
-  let shipSupplier = faker.company.companyName(0);
-  let mainQuery = `INSERT INTO products(id, title, shorthand, brand, price, stock, stars, ratings, shipdate, shipsupplier) VALUES('${id}', '${title}', '${shorthand}', '${brand}', '${price}', ${stock}, ${stars}, ${ratings}, '${shipDate}', '${shipSupplier}')`;
-  pool.query(mainQuery, (err, res) => {
-    if (err) {
-      // console.log(err);
-      errorCount++;
-    } else {
-      successCount++;
-    }
-  });
-  // Features
-  for (let i = 0; i < 1; i++) {
-    let feature = faker.lorem.sentences(3);
-    let featureQuery = `INSERT INTO features(id, feature) VALUES('${id}', '${feature}')`;
-    pool.query(featureQuery, (err, res) => {
-      if (err) {
-        // console.log(err);
-        errorCount++;
-      } else {
-        successCount++;
-      }
+  let seedFeature = () => {
+    console.log('SEEDING FEATURE ...');
+    let start = new Date().getTime();
+    let featureCSVPath = '/private/tmp/sdc-csv/features.csv';
+    let featureQuery = `COPY features FROM '${featureCSVPath}' DELIMITER ',' CSV HEADER`;
+    pool.query(featureQuery, (err, response) => {
+      if (err) { return console.log(err); }
+      console.log('---------- FEATURE SUCCESS ----------');
+      let end = new Date().getTime();
+      console.log(`Seeeding Time: ${Math.floor((end - start) * 100 / 1000) / 100} seconds`);
+      seedImage();
     });
-  }
-  // Images
-  for (let i = 0; i < 1; i++) {
-    let imgUrl = faker.image.technics();
-    let imgDesc = faker.lorem.sentence();
-    let imgQuery = `INSERT INTO images(id, imageurl, descriptions) VALUES('${id}', '${imgUrl}', '${imgDesc}')`;
-    pool.query(imgQuery, (err, res) => {
-      if (err) {
-        // console.log(err);
-        errorCount++;
-        // console.log('MAKING ERROR');
-      } else {
-        successCount++;
-        // console.log('INSERTING');
-      }
+  };
+  let seedProduct2 = () => {
+    console.log('SEEDING PRODUCT2 ...');
+    let start = new Date().getTime();
+    let product2CSVPath = '/private/tmp/sdc-csv/products2.csv';
+    let seedProduct2Query = `COPY products FROM '${product2CSVPath}' DELIMITER ',' CSV HEADER`;
+    pool.query(seedProduct2Query, (err, response) => {
+      if (err) { return console.log(err); }
+      console.log('---------- PRODUCT2 SUCCESS ----------');
+      let end = new Date().getTime();
+      console.log(`Seeeding Time: ${Math.floor((end - start) * 100 / 1000) / 100} seconds`);
+      seedFeature();
     });
-  }
+  };
+  let seedProduct1 = () => {
+    console.log('SEEDING PRODUCT1 ...');
+    let start = new Date().getTime();
+    let product1CSVPath = '/private/tmp/sdc-csv/products1.csv';
+    let seedProduct1Query = `COPY products FROM '${product1CSVPath}' DELIMITER ',' CSV HEADER`;
+    pool.query(seedProduct1Query, (err, response) => {
+      if (err) { return console.log(err); }
+      console.log('---------- PRODUCT1 SUCCESS ----------');
+      let end = new Date().getTime();
+      console.log(`Seeeding Time: ${Math.floor((end - start) * 100 / 1000) / 100} seconds`);
+      seedProduct2();
+    });
+  };
+  seedProduct1();
 };
+seedDB();
 
-let seedDB = (num) => {
-  for (let i = 0; i < num; i++) {
-    genRecord();
-  }
-
-  let firstStart = new Date().getTime();
-  let checker = setInterval(() => {
-    let currEnd = new Date().getTime();
-    console.log(`Time: ${Math.floor(((currEnd - firstStart) / 60000) * 100) / 100} min`);
-    let percent = Math.floor((((successCount + errorCount) / (num * 3) * 100) * 100)) / 100;
-    console.log(`${percent}% :: ${successCount + errorCount} / ${num * 3})`);
-
-    if (num * 3 === (successCount + errorCount)) {
-      console.log('---------- FINAL ----------');
-      console.log('~~ TIME ~~');
-      lastEnd = new Date().getTime();
-      let executionTimeMin = Math.floor(((lastEnd - firstStart) / 60000) * 100) / 100;
-      let executionTimeSec = Math.floor(((lastEnd - firstStart) / 1000) * 100) / 100;
-      console.log(`Execution Time: ${executionTimeMin} min - ${executionTimeSec} s`);
-      console.log('~~ SUCCESS ~~');
-      console.log(`Successes: ${successCount}`);
-      console.log(`Errors: ${errorCount}`);
-      console.log(`Error Rate: ${Math.floor((errorCount / num * 100) * 100) / 100}%`);
-      clearInterval(checker);
-    }
-  }, 3000);
-};
-seedDB(10000);
-// Currently: 1 min for 100k :: 10 min for 1 mil :: 100 min / 1.5 hours for 10m
+// Old: 1 min for 100k :: 10 min for 1 mil :: 100 min / 1.5 hours for 10m
+// New: 13 min for 10m
