@@ -1,5 +1,6 @@
 let faker = require('faker');
 const fs = require('fs');
+const { exec } = require('child_process');
 var rimraf = require('rimraf');
 const csv = require('csv-parser');
 const mongoose = require('mongoose');
@@ -44,7 +45,7 @@ let writeMongoData = (num, fileNum, totalFileCount, cb) => {
     });
   }
   let stringData = JSON.stringify(productData);
-  fs.appendFile(`src/server/mongoData/mongoData${fileNum}.txt`, stringData, () => {
+  fs.appendFile(`src/server/mongoData/mongoData${fileNum}.json`, stringData, () => {
     console.log(`----------  FILE ${fileNum}/${totalFileCount} COMPLETE ----------`);
     console.log(`~ Writing ${num} ++`);
     let end = new Date().getTime();
@@ -60,7 +61,7 @@ let writeMongoFiles = (numPerFile, fileCount, totalFileCount) => {
     return console.log(`TOTAL Writing Execution Time: ${Math.floor((totalEnd - totalStart) * 100 / 60000) / 100} min`);
   }
   console.log(`---------- Writing File: ${fileCount} (mongoData${fileCount}.txt) ----------`);
-  fs.writeFile(`src/server/mongoData/mongoData${fileCount}.txt`, '', function(err) {
+  fs.writeFile(`src/server/mongoData/mongoData${fileCount}.json`, '', function(err) {
     if (err) { return console.log(err); }
     console.log('~ Starting Write ... ');
     // 20 files, 500k each, 10 arrays, 50000 objects
@@ -74,9 +75,9 @@ let mongoFileSeed = () => {
   console.log('---------- DELETED MongoData Directory ----------');
   fs.mkdirSync('./src/server/mongoData');
   console.log('---------- CREATED MongoData Directory ----------');
-  writeMongoFiles(100000, 10, 10);
+  writeMongoFiles(100000, 100, 100);
 };
-mongoFileSeed(); // Time: 16min / 10mil
+// mongoFileSeed(); // Time: 14min / 10mil
 
 
 let readMongoDataFile = (path, cb) => {
@@ -103,7 +104,6 @@ let seedMongo = () => {
       console.log('---------- SEEDING DONE ----------');
       return console.log(`~ Total Seed Time: ${totalMin} min / ${totalMin} sec`);
     }
-
     readMongoDataFile((mongoDataDir + '/' + (files[currFileIndex])), (data) => {
       let insertStart = new Date().getTime();
       console.log(`~ Inserting From ${files[currFileIndex]} (Index: ${currFileIndex})`);
@@ -118,23 +118,34 @@ let seedMongo = () => {
         .catch((err) => { console.log(err); });
     });
   };
+  // Product.deleteMany({})
+  //   .then(() => {
+  // console.log('---------- MONGODB EMPTIED ----------');
+  fs.readdir(mongoDataDir, (err, files) => {
+    // console.log('---------- GETTING ALL FILES ----------');
+    // readFile(files, files.length - 1);
+    let start = new Date().getTime();
+    let fileCount = files.length - 1;
+    let seedFiles = (fileIndex) => {
+      if (fileIndex < 0 ) { return console.log('---------- SEEDING COMPLETE ----------'); }
+      let mongoLocalImport = `mongoimport -d localsdc -c products --type json --file src/server/mongoData/${files[fileIndex]} --jsonArray`;
+      let mongoAtlasImport = `mongoimport --uri "${mongoAtlas}" --collection products --drop --type json --file src/server/mongoData/${files[fileIndex]} --jsonArray`;
 
-  Product.deleteMany({})
-    .then(() => {
-      console.log('---------- MONGODB EMPTIED ----------');
-      fs.readdir(mongoDataDir, (err, files) => {
-        console.log('---------- GETTING ALL FILES ----------');
-        readFile(files, files.length - 1);
+      exec(mongoLocalImport, (err, stdout, stderr) => {
+        if (err) { return console.log(err); }
+        console.log(`stdout: ${stdout}`);
+        console.log(`stderr: ${stderr}`);
+        let end = new Date().getTime();
+        let seedPercent = Math.floor(((files.length - fileIndex) / files.length) * 10000) / 100;
+        console.log(`~ Seeding: ${seedPercent}% | ${fileIndex}/${files.length}`);
+        console.log(`~ Seeding Execution Time: ${Math.floor((end - start) * 100 / 60000) / 100} min / ${Math.floor((end - start) * 100 / 1000) / 100} sec`);
+        seedFiles(fileIndex - 1);
       });
-    })
-    .catch((err) => { console.log(err); });
+    };
+    seedFiles(fileCount);
+
+  });
+  // })
+  // .catch((err) => { console.log(err); });
 };
-// seedMongo(); // Time: 50 min
-
-
-// 100 - 0.0025m ->0.000025 ->  250 min   Atlas
-// 1k  - 0.02m ->  0.00002  ->  200 min   Atlas
-// 10k - 0.15m ->  0.000015 ->  150 min   Atlas
-// 100k -1.75m ->  0.000017 ->  175 min   Atlas
-// 10k - 0.10m ->  0.00001  ->  100 min   Local
-// 100k -1.00m ->  0.00001  ->  100 min   Local
+seedMongo(); // Time: 8min
