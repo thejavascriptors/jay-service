@@ -44,6 +44,7 @@
   "scripts": {
     "sdc:server": "nodemon src/server/index.js",
     "sdc:seedPostgres": "node src/server/seedPostgres.js",
+    "sdc:genMongo": "node src/server/mongoGenJSON.js",
     "sdc:seedMongo": "node src/server/seedMongo.js",
     "sdc:genIds": "node src/server/csv/idGen.js",
     "sdc:genProducts": "node src/server/csv/productGen.js",
