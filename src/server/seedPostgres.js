@@ -72,7 +72,4 @@ let seedDB = () => {
   };
   seedProduct1();
 };
-seedDB();
-
-// Old: 1 min for 100k :: 10 min for 1 mil :: 100 min / 1.5 hours for 10m
-// New: 13 min for 10m
+seedDB(); // Time: 13min / 10mil

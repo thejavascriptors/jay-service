@@ -1,3 +1,4 @@
+require('newrelic');
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -20,32 +21,15 @@ app.use(compression());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Queries should execute in less than 50ms
-// Reach 1k rps on machine / 100 on ec2
-// API response time less than 2000ms
-// Max error rate 1%
-// Stress test Httperf, Jmeter, Artillery,
 
 app.get('/products/:id', (req, res) => {
   let id = req.params.id;
-  // Ask about inner joins vs double inner joins vs regular queries for creating structure
-  // let multiQuery = `SELECT * FROM products INNER JOIN features USING(product_id) INNER JOIN images USING(product_id) WHERE products.product_id = '${id}'`;
-  // pool.query(multiQuery, (err, response) => {
-  //   console.log('Querying...');
-  //   err ? res.send(err) : res.send(response);
-  // });
-
-  // EXPLAIN ANALYZE SELECT * FROM FEATURES WHERE product_id = '7mhmufvqf3vg';
-
-  // let product;
-  // Single query
   let productQuery = `SELECT * FROM products WHERE product_id = '${id}'`;
   let featureQuery = `SELECT * FROM features WHERE product_id = '${id}'`;
   let imageQuery = `SELECT * FROM images WHERE product_id = '${id}'`;
   pool.query(productQuery, (err, pResRows) => {
     if (err) { return res.send(err); }
     let pRes = pResRows.rows[0];
-    console.log(pRes);
     product = {
       name: pRes.title,
       brand: pRes.brand,
@@ -55,7 +39,7 @@ app.get('/products/:id', (req, res) => {
       price: pRes.price,
       stock: pRes.stock,
       shipping: { date: pRes.shipdate, supplier: pRes.shipsupplier },
-      description: 'pRes.descriptions' // Need to add
+      description: 'pRes.descriptions' // Need to add to schema / seeding func
     };
     pool.query(featureQuery, (err, fRes) => {
       if (err) { return res.send(err); }
@@ -80,27 +64,6 @@ app.get('/products/:id', (req, res) => {
   });
 });
 
-
-/*
-  let dataTemplate = {
-    name: '',
-    brand: '',
-    stars: '',
-    ratings: '',
-    shorthand: '',
-    price: '',
-    stock: '',
-    shipping: { date: '', supplier: '' },
-    features: [ '', '', '' ],
-    description: '',
-    photos: [
-      { url: '', description: '' },
-      { url: '', description: '' },
-      { url: '', description: '' }
-    ]
-  };
-});
-*/
 
 const PORT = 3000;
 app.listen(PORT, () => console.log('Server is running on port', PORT));
