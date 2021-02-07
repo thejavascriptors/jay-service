@@ -1,11 +1,23 @@
+require('newrelic');
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const path = require('path');
 const compression = require('compression');
 let faker = require('faker');
+const mongoose = require('mongoose');
+const Product = require('./mongoDB');
+const secret = require('./secret');
 const { Pool, Client } = require('pg');
 
+// Mongo
+let mongoAtlas = secret.mongoURI;
+let mongoLocal = 'mongodb://127.0.0.1:27017/sdclocal';
+mongoose.connect(mongoAtlas, {useNewUrlParser: true, useUnifiedTopology: true});
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', () => { console.log('---------- Mongo Connected ----------'); });
+// PostgreSQL
 const pool = new Pool({
   user: 'postgres',
   password: 'root',
@@ -20,87 +32,59 @@ app.use(compression());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Queries should execute in less than 50ms
-// Reach 1k rps on machine / 100 on ec2
-// API response time less than 2000ms
-// Max error rate 1%
-// Stress test Httperf, Jmeter, Artillery,
 
+// MongoDB
 app.get('/products/:id', (req, res) => {
   let id = req.params.id;
-  // Ask about inner joins vs double inner joins vs regular queries for creating structure
-  // let multiQuery = `SELECT * FROM products INNER JOIN features USING(product_id) INNER JOIN images USING(product_id) WHERE products.product_id = '${id}'`;
-  // pool.query(multiQuery, (err, response) => {
-  //   console.log('Querying...');
-  //   err ? res.send(err) : res.send(response);
-  // });
-
-  // EXPLAIN ANALYZE SELECT * FROM FEATURES WHERE product_id = '7mhmufvqf3vg';
-
-  // let product;
-  // Single query
-  let productQuery = `SELECT * FROM products WHERE product_id = '${id}'`;
-  let featureQuery = `SELECT * FROM features WHERE product_id = '${id}'`;
-  let imageQuery = `SELECT * FROM images WHERE product_id = '${id}'`;
-  pool.query(productQuery, (err, pResRows) => {
-    if (err) { return res.send(err); }
-    let pRes = pResRows.rows[0];
-    console.log(pRes);
-    product = {
-      name: pRes.title,
-      brand: pRes.brand,
-      stars: pRes.stars,
-      ratings: pRes.ratings,
-      shorthand: pRes.shorthand,
-      price: pRes.price,
-      stock: pRes.stock,
-      shipping: { date: pRes.shipdate, supplier: pRes.shipsupplier },
-      description: 'pRes.descriptions' // Need to add
-    };
-    pool.query(featureQuery, (err, fRes) => {
-      if (err) { return res.send(err); }
-      let featureRows = fRes.rows;
-      product.features = [];
-      for (let featureObj of featureRows) {
-        product.features.push(featureObj.feature);
-      }
-      pool.query(imageQuery, (err, iRes) => {
-        if (err) { return res.send(err); }
-        let imageRows = iRes.rows;
-        product.photos = [];
-        for (let imageObj of imageRows) {
-          let photo = {};
-          photo.url = imageObj.imageurl;
-          photo.description = imageObj.descriptions;
-          product.photos.push(photo);
-        }
-        res.send(product);
-      });
-    });
-  });
+  Product.findOne({ _id: id })
+    .then((data) => { res.status(200).send(data); })
+    .catch((err) => { res.status(404).send(err); });
 });
 
 
-/*
-  let dataTemplate = {
-    name: '',
-    brand: '',
-    stars: '',
-    ratings: '',
-    shorthand: '',
-    price: '',
-    stock: '',
-    shipping: { date: '', supplier: '' },
-    features: [ '', '', '' ],
-    description: '',
-    photos: [
-      { url: '', description: '' },
-      { url: '', description: '' },
-      { url: '', description: '' }
-    ]
-  };
-});
-*/
+// PostgreSQL
+// app.get('/products/:id', (req, res) => {
+//   let id = req.params.id;
+//   let productQuery = `SELECT * FROM products WHERE product_id = '${id}'`;
+//   let featureQuery = `SELECT * FROM features WHERE product_id = '${id}'`;
+//   let imageQuery = `SELECT * FROM images WHERE product_id = '${id}'`;
+//   pool.query(productQuery, (err, pResRows) => {
+//     if (err) { return res.status(404).send(err); }
+//     let pRes = pResRows.rows[0];
+//     product = {
+//       name: pRes.title,
+//       brand: pRes.brand,
+//       stars: pRes.stars,
+//       ratings: pRes.ratings,
+//       shorthand: pRes.shorthand,
+//       price: pRes.price,
+//       stock: pRes.stock,
+//       shipping: { date: pRes.shipdate, supplier: pRes.shipsupplier },
+//       description: 'pRes.descriptions' // Need to add to schema / seeding func
+//     };
+//     pool.query(featureQuery, (err, fRes) => {
+//       if (err) { return res.status(404).send(err); }
+//       let featureRows = fRes.rows;
+//       product.features = [];
+//       for (let featureObj of featureRows) {
+//         product.features.push(featureObj.feature);
+//       }
+//       pool.query(imageQuery, (err, iRes) => {
+//         if (err) { return res.status(404).send(err); }
+//         let imageRows = iRes.rows;
+//         product.photos = [];
+//         for (let imageObj of imageRows) {
+//           let photo = {};
+//           photo.url = imageObj.imageurl;
+//           photo.description = imageObj.descriptions;
+//           product.photos.push(photo);
+//         }
+//         res.status(200).send(product);
+//       });
+//     });
+//   });
+// });
+
 
 const PORT = 3000;
 app.listen(PORT, () => console.log('Server is running on port', PORT));

@@ -7,6 +7,11 @@ src/server/csv/products2.csv
 
 # Other
 src/.DS_Store
+src/server/.DS_Store
+src/server/mongoData
+src/server/secret.js
+package-lock.json
+.DS_Store
 
 # Logs
 logs
