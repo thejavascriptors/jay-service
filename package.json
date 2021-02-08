@@ -42,7 +42,9 @@
     "webpack": "^5.15.0"
   },
   "scripts": {
-    "sdc:server": "nodemon src/server/index.js",
+    "sdc:server": "node src/server/index.js",
+    "sdc:serverDev": "nodemon src/server/index.js",
+    "sdc:speedTest": "k6 run src/server/speedTest.js",
     "sdc:seedPostgres": "node src/server/seedPostgres.js",
     "sdc:genMongo": "node src/server/mongoGenJSON.js",
     "sdc:seedMongo": "node src/server/seedMongo.js",

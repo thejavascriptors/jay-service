@@ -10,6 +10,13 @@ const Product = require('./mongoDB');
 const secret = require('./secret');
 const { Pool, Client } = require('pg');
 
+const app = express();
+app.use(cors());
+app.use(compression());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, '../../dist')));
+
 // Mongo
 let mongoAtlas = secret.mongoURI;
 let mongoLocal = 'mongodb://127.0.0.1:27017/sdclocal';
@@ -17,6 +24,7 @@ mongoose.connect(mongoAtlas, {useNewUrlParser: true, useUnifiedTopology: true});
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', () => { console.log('---------- Mongo Connected ----------'); });
+
 // PostgreSQL
 const pool = new Pool({
   user: 'postgres',
@@ -26,23 +34,29 @@ const pool = new Pool({
   port: 5432
 });
 
-const app = express();
-app.use(cors());
-app.use(compression());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname + '../../dist/index.html'));
+  // res.send('LOADED');
+});
 
 
-// MongoDB
+// // // MongoDB
 app.get('/products/:id', (req, res) => {
   let id = req.params.id;
-  Product.findOne({ _id: id })
-    .then((data) => { res.status(200).send(data); })
+  var filter = {};
+  filter['_id'] = id;
+  // console.log(filter);
+
+  Product.find(filter)
+    .then((data) => {
+      // console.log(data);
+      res.status(200).send(data);
+    })
     .catch((err) => { res.status(404).send(err); });
 });
 
 
-// PostgreSQL
+// // // PostgreSQL
 // app.get('/products/:id', (req, res) => {
 //   let id = req.params.id;
 //   let productQuery = `SELECT * FROM products WHERE product_id = '${id}'`;
@@ -86,5 +100,15 @@ app.get('/products/:id', (req, res) => {
 // });
 
 
-const PORT = 3000;
+// /usr/local/Cellar/nginx/1.19.5/bin/nginx
+// /usr/local/etc/nginx/nginx.conf
+// /usr/local/var/log/nginx
+// /usr/local/var/run/nginx
+// /usr/local/var/run/
+// /usr/local/Cellar/nginx
+// READ DOCS
+// ./configure --sbin-path=/usr/local/Cellar/nginx/1.19.5/bin/nginx --conf-path=/usr/local/etc/nginx/nginx.conf --error-log-path=/usr/local/var/log/nginx/error.log --http-log-path=/usr/local/var/log/nginx/access.log --with-pcre --pid-path=/usr/local/var/run/nginx.pid --with-http_ssl_module
+
+
+const PORT = 8081;
 app.listen(PORT, () => console.log('Server is running on port', PORT));
