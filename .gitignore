@@ -12,6 +12,7 @@ src/server/mongoData
 src/server/secret.js
 package-lock.json
 .DS_Store
+newrelic.js
 
 # Logs
 logs
