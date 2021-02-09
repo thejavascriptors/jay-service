@@ -17,6 +17,15 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '../../dist')));
 
+// start multi instaces:
+// pm2 start --name server1 src/server/index.js -- --name server1 --port 3000
+// pm2 start --name server2 src/server/index.js -- --name server2 --port 3001
+// pm2 start --name server3 src/server/index.js -- --name server3 --port 3002
+// pm2 start --name server4 src/server/index.js -- --name server4 --port 3003
+// change port CONST when creating instance
+const PORT = 3000;
+
+
 // Mongo
 let mongoAtlas = secret.mongoURI;
 let mongoLocal = 'mongodb://127.0.0.1:27017/sdclocal';
@@ -41,8 +50,9 @@ app.get('/', (req, res) => {
 
 
 // // // MongoDB
-app.get('/products/:id', (req, res) => {
-  let id = req.params.id;
+app.get('/products', (req, res) => {
+// let id = req.params.id;
+  let id = '60209c02e15e96e1dc33c32b';
   var filter = {};
   filter['_id'] = id;
   // console.log(filter);
@@ -50,6 +60,7 @@ app.get('/products/:id', (req, res) => {
   Product.find(filter)
     .then((data) => {
       // console.log(data);
+      data[0].server = `-- PORT: ${PORT}`;
       res.status(200).send(data);
     })
     .catch((err) => { res.status(404).send(err); });
@@ -57,8 +68,9 @@ app.get('/products/:id', (req, res) => {
 
 
 // // // PostgreSQL
-// app.get('/products/:id', (req, res) => {
-//   let id = req.params.id;
+// app.get('/products', (req, res) => {
+//   // let id = req.params.id;
+//   let id = 'v4o2u9mtpnhl';
 //   let productQuery = `SELECT * FROM products WHERE product_id = '${id}'`;
 //   let featureQuery = `SELECT * FROM features WHERE product_id = '${id}'`;
 //   let imageQuery = `SELECT * FROM images WHERE product_id = '${id}'`;
@@ -66,6 +78,7 @@ app.get('/products/:id', (req, res) => {
 //     if (err) { return res.status(404).send(err); }
 //     let pRes = pResRows.rows[0];
 //     product = {
+//       port: `-- PORT: ${PORT}`,
 //       name: pRes.title,
 //       brand: pRes.brand,
 //       stars: pRes.stars,
@@ -100,15 +113,4 @@ app.get('/products/:id', (req, res) => {
 // });
 
 
-// /usr/local/Cellar/nginx/1.19.5/bin/nginx
-// /usr/local/etc/nginx/nginx.conf
-// /usr/local/var/log/nginx
-// /usr/local/var/run/nginx
-// /usr/local/var/run/
-// /usr/local/Cellar/nginx
-// READ DOCS
-// ./configure --sbin-path=/usr/local/Cellar/nginx/1.19.5/bin/nginx --conf-path=/usr/local/etc/nginx/nginx.conf --error-log-path=/usr/local/var/log/nginx/error.log --http-log-path=/usr/local/var/log/nginx/access.log --with-pcre --pid-path=/usr/local/var/run/nginx.pid --with-http_ssl_module
-
-
-const PORT = 8081;
 app.listen(PORT, () => console.log('Server is running on port', PORT));

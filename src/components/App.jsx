@@ -82,7 +82,7 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    Axios('http://localhost:8080/products/60209c02e15e96e1dc33c32b')
+    Axios('http://localhost/products')
       .then(product => {
         let currProduct = product.data[0];
         this.setState({
